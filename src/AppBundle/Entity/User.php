@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+
 //use App\Controller\ResetPasswordAction;
 
 /////////////////////////// fichier à modifier (passwords: new,reset ..??? AND Roles)
@@ -20,8 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
- * @UniqueEntity("username", errorPath="username")
- * @UniqueEntity("email")
+ * @UniqueEntity("username", errorPath="username", groups={"post"})
+ * @UniqueEntity("email", groups={"post"})
  * @ApiResource(
  *     itemOperations={
  *         "get"={
@@ -54,13 +55,24 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
+
+    const ROLE_COMMENTATOR = 'ROLE_COMMENTATOR';
+    const ROLE_WRITER = 'ROLE_WRITER';
+    const ROLE_EDITOR = 'ROLE_EDITOR';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
+
+    const DEFAULT_ROLES = [self::ROLE_COMMENTATOR];
+
+
+
     /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"get"})
+     * @Groups({"get", "get-blog-post-with-author", "get-comment-with-author"})
      */
     private $id;
 
@@ -68,7 +80,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255)
-     * @Groups({"get", "post"})
+     * @Groups({"get", "post", "get-comment-with-author","get-blog-post-with-author"})
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=6, max=255, groups={"post"})
      */
@@ -89,7 +101,7 @@ class User implements UserInterface
     private $password;
 
     /**
-     * (groups={"post"})
+     * (groups={{"post"})
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Expression(
      *     "this.getPassword() === this.getRetypedPassword()",
@@ -103,7 +115,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Groups({"get", "post", "put"})
+     * @Groups({"get", "post", "put", "get-comment-with-author","get-blog-post-with-author"})
      * @Assert\NotBlank(groups={"post"})
      * @Assert\Length(min=5, max=255, groups={"post", "put"})
      */
@@ -132,10 +144,17 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="simple_array", length=200)
+     * @Groups({"get-admin", "get-owner"})
+     */
+    private $roles;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->roles =self::DEFAULT_ROLES;
     }
 
 
@@ -252,6 +271,7 @@ class User implements UserInterface
     {
         return $this->posts;
     }
+
     /**
      * @return Collection
      */
@@ -259,10 +279,6 @@ class User implements UserInterface
     {
         return $this->comments;
     }
-
-
-
-
 
 
     /**
@@ -279,9 +295,13 @@ class User implements UserInterface
      *
      * @return (Role|string)[] The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        return $this->roles;
+    }
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
     }
 
     /**
@@ -318,6 +338,8 @@ class User implements UserInterface
     {
         $this->retypedPassword = $retypedPassword;
     }
+
+
 
 
 }

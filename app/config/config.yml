@@ -80,7 +80,7 @@ swiftmailer:
 #        - AppBundle\Entity\Product
 
 lexik_jwt_authentication:
-    secret_key:       '%kernel.project_dir%/app/cofig/jwt/private.pem'
-    public_key:       '%kernel.project_dir%/app/cofig/jwt/public.pem'
+    secret_key:       '%kernel.project_dir%/app/config/jwt/private.pem'
+    public_key:       '%kernel.project_dir%/app/config/jwt/public.pem'
     pass_phrase:      'khalilkhalil'
     token_ttl:        3600

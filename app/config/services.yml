@@ -33,3 +33,12 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    AppBundle\Serializer\UserContextBuilder:
+        decorates: 'api_platform.serializer.context_builder'
+        arguments: ['@AppBundle\Serializer\UserContextBuilder.inner']
+
+    AppBundle\Serializer\UserAttributeNormalizer:
+        arguments: ['@security.token_storage']
+        tags:
+            - { name: 'serializer.normalizer', priority: 64 }
