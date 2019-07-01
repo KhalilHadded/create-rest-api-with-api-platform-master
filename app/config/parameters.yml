@@ -5,8 +5,8 @@ parameters:
     database_name: database
     database_user: root
     database_password: null
-    mailer_transport: smtp
+    mailer_transport: gmail
     mailer_host: 127.0.0.1
-    mailer_user: khalil_hadded@hotmail.fr
-    mailer_password: pass
+    mailer_user: symfonywebpack@gmail.com
+    mailer_password: TeamLead123
     secret: teamleadyy

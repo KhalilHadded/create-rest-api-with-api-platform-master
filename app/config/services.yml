@@ -42,3 +42,8 @@ services:
         arguments: ['@security.token_storage']
         tags:
             - { name: 'serializer.normalizer', priority: 64 }
+
+    AppBundle\Security\:
+        resource: '../../src/AppBundle/Security'
+        public: true
+        tags: ['controller.service_arguments']
