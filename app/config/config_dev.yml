@@ -13,11 +13,16 @@ web_profiler:
 
 monolog:
     handlers:
+        token_confirmation:
+            type: stream
+            level: debug
+            path: "%kernel.logs_dir%/token_confirmation_%kernel.environment%.log"
+            channels: [token_confirmation]
         main:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
-            channels: ['!event']
+            channels: ['!event','!token_confirmation']
         console:
             type: console
             process_psr_3_messages: false

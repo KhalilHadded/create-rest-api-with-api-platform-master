@@ -10,7 +10,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/////////////////////////// fichier à modifier
 
 /**
  * Comment
@@ -18,6 +17,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="comment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CommentRepository")
  * @ApiResource(
+ *     attributes={
+ *         "order"={"published": "DESC"},
+ *         "pagination_client_enabled"=true,
+ *         "pagination_client_items_per_page"=true
+ *     },
  *     subresourceOperations={
  *           "api_blog_posts_comments_get_subresource"={
  *                "method"="get",
@@ -167,5 +171,10 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
     {
         $this->blogPost = $blogPost;
         return $this;
+    }
+
+    public function __toString()
+    {
+        return substr($this->content, 0, 20) . '...';
     }
 }

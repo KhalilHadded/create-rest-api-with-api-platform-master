@@ -17,7 +17,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
-/////////////////////////// fichier à modifier
 
 
 /**
@@ -25,7 +24,44 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  *
  * @ORM\Table(name="blog_post")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BlogPostRepository")
+ * @ApiFilter(
+ *     SearchFilter::class,
+ *     properties={
+ *         "title": "partial",
+ *         "content": "partial",
+ *         "author": "exact",
+ *         "author.name": "partial"
+ *     }
+ * )
+ * @ApiFilter(
+ *     DateFilter::class,
+ *     properties={
+ *         "published"
+ *     }
+ * )
+ * @ApiFilter(
+ *     RangeFilter::class,
+ *     properties={"id"}
+ *     )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={
+ *         "id",
+ *         "published",
+ *         "title"
+ *     },
+ *     arguments={"orderParameterName"="_order"}
+ * )
+ * @ApiFilter(
+ *     PropertyFilter::class,
+ *     arguments={
+ *     "parameterName": "properties",
+ *     "overrideDefaultProperties": false,
+ *     "whitelist": {"id", "slug", "title", "content", "author"}
+ * }
+ * )
  * @ApiResource(
+ *     attributes={"order"={"published": "DESC"}, "maximum_items_per_page"=30},
  *     itemOperations={
  *     "get"={
  *             "normalization_context"={
@@ -114,9 +150,19 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Image")
+     * @ORM\JoinTable()
+     * @ApiSubresource()
+     * @Groups({"post", "get-blog-post-with-author"})
+     */
+    private $images;
+
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
 
@@ -241,6 +287,26 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image)
+    {
+        $this->images->add($image);
+    }
+
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
     }
 
 

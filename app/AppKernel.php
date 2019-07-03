@@ -23,10 +23,11 @@ class AppKernel extends Kernel
             new Nelmio\CorsBundle\NelmioCorsBundle(),
 
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
+            new Vich\UploaderBundle\VichUploaderBundle(),
 
-            new AppBundle\AppBundle()
+            new AppBundle\AppBundle(),
 
-//            new EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle(),
+            new EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle()
 //            new Symfony\Bundle\AsseticBundle\AsseticBundle()
         ];
 

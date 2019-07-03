@@ -16,7 +16,7 @@ sensio_framework_extra:
 
 framework:
     #esi: ~
-    #translator: { fallbacks: ['%locale%'] }
+    translator: { fallbacks: [ "en" ] }
     secret: '%secret%%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'
@@ -33,7 +33,8 @@ framework:
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
     fragments: ~
     http_method_override: true
-    assets: ~
+    assets:
+        json_manifest_path: '%kernel.project_dir%/web/build/manifest.json'
     php_errors:
         log: true
 
@@ -72,15 +73,48 @@ swiftmailer:
     password: '%mailer_password%'
     spool: { type: memory }
 
-#easy_admin:
-#    entities:
-#        # change the following to the namespaces of your own entities
-#        - AppBundle\Entity\BlogPost
-#        - AppBundle\Entity\Category
-#        - AppBundle\Entity\Product
+easy_admin:
+    entities:
+        # change the following to the namespaces of your own entities
+        User:
+            class: AppBundle\Entity\User
+            controller: AppBundle\Controller\UserAdminController
+        BlogPost:
+            class: AppBundle\Entity\BlogPost
+            list:
+                actions: [ { name: 'Show' } ]
+            show:
+                fields:
+                    - id
+                    - title
+                    - published
+                    - { property: 'comments', template: 'comments.html.twig' }
+                    - images
+        Comment:
+            class: AppBundle\Entity\Comment
+        Image:
+            class: AppBundle\Entity\Image
+            list:
+                fields:
+                    - id
+                    - { property: 'url', type: 'image', label: 'Image' }
+            form:
+                fields:
+                    - { property: 'file', type: 'Vich\UploaderBundle\Form\Type\VichFileType' }
 
 lexik_jwt_authentication:
     secret_key:       '%kernel.project_dir%/app/config/jwt/private.pem'
     public_key:       '%kernel.project_dir%/app/config/jwt/public.pem'
     pass_phrase:      'khalilkhalil'
     token_ttl:        3600
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        images:
+            uri_prefix:         /images
+            upload_destination: '%kernel.root_dir%/../web/images'
+            namer:               Vich\UploaderBundle\Naming\UniqidNamer
+
+monolog:
+    channels: ['token_confirmation']

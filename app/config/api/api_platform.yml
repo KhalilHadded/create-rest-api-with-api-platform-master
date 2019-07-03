@@ -55,19 +55,23 @@ api_platform:
             client_items_per_page: true
 
             # The default number of items per page.
-            items_per_page: 30
+            items_per_page: 10
 
             # The maximum number of items per page.
-            maximum_items_per_page: 200
+            maximum_items_per_page: 20
 
             # The default name of the parameter handling the page number.
-            page_parameter_name: 'page'
+            page_parameter_name: '_page'
 
             # The name of the query parameter to enable or disable pagination.
             enabled_parameter_name: 'pagination'
 
             # The name of the query parameter to set the number of items per page.
             items_per_page_parameter_name: 'itemsPerPage'
+
+            partial: true
+            client_partial: true
+            partial_parameter_name: 'partial'
 
     # The list of exceptions mapped to their HTTP status code.
     exception_to_status:
@@ -77,7 +81,8 @@ api_platform:
         # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
         ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST'
 
-        # ...
+        AppBundle\Exception\EmptyBodyException: 400
+        AppBundle\Exception\InvalidConfirmationTokenException: 404
 
     # The list of enabled formats. The first one will be the default.
     formats:

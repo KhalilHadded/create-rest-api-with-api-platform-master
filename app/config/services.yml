@@ -47,3 +47,7 @@ services:
         resource: '../../src/AppBundle/Security'
         public: true
         tags: ['controller.service_arguments']
+
+    AppBundle\Security\UserConfirmationService:
+        arguments:
+            $logger: '@monolog.logger.token_confirmation'

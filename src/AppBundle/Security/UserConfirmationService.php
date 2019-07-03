@@ -3,12 +3,12 @@
 
 namespace AppBundle\Security;
 
-//use AppBundle\Exception\InvalidConfirmationTokenException;
+use AppBundle\Exception\InvalidConfirmationTokenException;
 use AppBundle\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\User;
+
 
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -37,24 +37,26 @@ class UserConfirmationService
      */
     private $entityManager;
 
-//    /**
-//     * @var LoggerInterface
-//     */
-//    private $logger;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
 //        UserRepository $userRepository,
-//        LoggerInterface $logger,
+        LoggerInterface $logger,
         EntityManagerInterface $entityManager
     )
     {
 //        $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
-//        $this->logger = $logger;
+        $this->logger = $logger;
     }
 
     public function confirmUser(string $confirmationToken)
     {
+        $this->logger->debug('Fetching user by confirmation token');
+
 //        $user=$this->userRepository->findOneBy(['confirmationToken'=> $confirmationToken]);
 
         $user=$this->entityManager->getRepository(User::class)->findOneBy(['confirmationToken'=> $confirmationToken]);
@@ -64,12 +66,15 @@ class UserConfirmationService
 
         if(!$user)
         {
-          throw new NotFoundHttpException();
+            $this->logger->debug('User by confirmation token not found');
+            throw new InvalidConfirmationTokenException();
         }
 
         $user->setEnabled(true);
         $user->setConfirmationToken(null);
         $this->entityManager->flush();
+
+        $this->logger->debug('Confirmed user by confirmation token');
     }
 
 }
