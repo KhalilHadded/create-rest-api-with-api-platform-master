@@ -47,6 +47,7 @@
         "behatch/contexts": "^3.2",
         "coduo/php-matcher": "^3.1",
         "sensio/generator-bundle": "^3.0",
+        "fzaninotto/faker": "^1.8",
         "symfony/phpunit-bridge": "^4.3"
     },
     "scripts": {

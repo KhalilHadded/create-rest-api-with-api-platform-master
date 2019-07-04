@@ -51,3 +51,12 @@ services:
     AppBundle\Security\UserConfirmationService:
         arguments:
             $logger: '@monolog.logger.token_confirmation'
+
+    AppBundle\DataFixtures\:
+        resource: '../../src/AppBundle/DataFixtures'
+        public: true
+
+    AppBundle\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: 1 }
+        arguments: ['@api_platform.action.exception', '@logger', false]
