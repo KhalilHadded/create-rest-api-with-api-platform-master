@@ -14,7 +14,8 @@ class BlogPostList extends React.Component {
       }
 
 
-    return (<div>
+    return (
+		<div>
         {posts && posts.map(post => (
             <div className="card mb-3 mt-3 shadow-sm" key={post.id}>
                 <div className="card-body">
@@ -29,7 +30,8 @@ class BlogPostList extends React.Component {
                 </div>
             </div>
         ))}
-    </div>)
+		</div>
+			)
   }
 }
 

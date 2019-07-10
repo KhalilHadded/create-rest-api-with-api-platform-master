@@ -28,6 +28,7 @@ class ResetPasswordAction
      * @var JWTTokenManagerInterface
      */
     private $tokenManager;
+
     public function __construct(
         ValidatorInterface $validator,
         UserPasswordEncoderInterface $userPasswordEncoder,

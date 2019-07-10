@@ -1,0 +1,19 @@
+.fade-enter {
+    opacity: 0.01;
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transition: opacity 1000ms ease-in;
+}
+
+.fade-exit {
+    opacity: 1;
+}
+
+.fade-exit-active {
+    opacity: 0.01;
+    transition: opacity 1000ms ease-in;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9hc3NldHMvY3NzL0NvbW1lbnRMaXN0LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLGNBQWM7Q0FDakI7O0FBRUQ7SUFDSSxXQUFXO0lBQ1gsbUNBQW1DO0NBQ3RDOztBQUVEO0lBQ0ksV0FBVztDQUNkOztBQUVEO0lBQ0ksY0FBYztJQUNkLG1DQUFtQyIsImZpbGUiOiJqcy9hcHAuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmZhZGUtZW50ZXIge1xyXG4gICAgb3BhY2l0eTogMC4wMTtcclxufVxyXG5cclxuLmZhZGUtZW50ZXItYWN0aXZlIHtcclxuICAgIG9wYWNpdHk6IDE7XHJcbiAgICB0cmFuc2l0aW9uOiBvcGFjaXR5IDEwMDBtcyBlYXNlLWluO1xyXG59XHJcblxyXG4uZmFkZS1leGl0IHtcclxuICAgIG9wYWNpdHk6IDE7XHJcbn1cclxuXHJcbi5mYWRlLWV4aXQtYWN0aXZlIHtcclxuICAgIG9wYWNpdHk6IDAuMDE7XHJcbiAgICB0cmFuc2l0aW9uOiBvcGFjaXR5IDEwMDBtcyBlYXNlLWluO1xyXG59Il0sInNvdXJjZVJvb3QiOiIifQ==*/

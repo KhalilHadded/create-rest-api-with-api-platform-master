@@ -7,8 +7,21 @@ import {
     BLOG_POST_LIST_REQUEST,
     BLOG_POST_RECEIVED,
     BLOG_POST_REQUEST,
-    BLOG_POST_UNLOAD
+    BLOG_POST_UNLOAD,
+    COMMENT_LIST_ERROR,
+    COMMENT_LIST_RECEIVED,
+    COMMENT_LIST_REQUEST,
+    COMMENT_LIST_UNLOAD,
+    COMMENT_ADDED,
+    USER_LOGIN_SUCCESS,
+    USER_SET_ID,
+    USER_PROFILE_REQUEST,
+    USER_PROFILE_RECEIVED,
+    USER_PROFILE_ERROR
 } from "./constants";
+
+import {SubmissionError} from "redux-form";
+import {parseApiErrors} from "../apiUtils";
 
 
 export const blogPostListRequest = () => ({
@@ -73,4 +86,112 @@ export const blogPostAdd = () => ({
     }
 });
 
+
+
+export const commentListRequest = () => ({
+    type: COMMENT_LIST_REQUEST,
+});
+
+export const commentListError = (error) => ({
+    type: COMMENT_LIST_ERROR,
+    error
+});
+
+export const commentListReceived = (data) => ({
+    type: COMMENT_LIST_RECEIVED,
+    data
+});
+
+export const commentListUnload = () => ({
+    type: COMMENT_LIST_UNLOAD,
+});
+
+export const commentListFetch = (id) => {
+    return (dispatch) => {
+        dispatch(commentListRequest());
+        return requests.get(`/blog_posts/${id}/comments`)
+            .then(response => dispatch(commentListReceived(response)))
+            .catch(error => dispatch(commentListError(error)));
+    }
+};
+
+export const commentAdded = (comment) => ({
+    type: COMMENT_ADDED,
+    comment
+});
+
+export const commentAdd = (comment, blogPostId) => {
+    return (dispatch) => {
+        return requests.post(
+            '/comments',
+            {
+                content: comment,
+                blogPost: `/api/blog_posts/${blogPostId}`
+            }
+        ).then(
+            response => dispatch(commentAdded(response))
+        ).catch((error) => {
+
+            throw new SubmissionError(parseApiErrors(error));
+        })
+    }
+};
+
+
+export const userLoginSuccess = (token, userId) => {
+    return {
+        type: USER_LOGIN_SUCCESS,
+        token,
+        userId
+    }
+};
+
+export const userLoginAttempt = (username, password) => {
+    return (dispatch) => {
+        return requests.post('/login_check', {username, password}, false).then(
+            response => dispatch(userLoginSuccess(response.token, response.id))
+        ).catch(() => {
+            throw new SubmissionError({
+                _error: 'Username or password is invalid'
+            })
+        });
+    }
+};
+
+export const userSetId = (userId) => {
+    return {
+        type: USER_SET_ID,
+        userId
+    }
+};
+
+export const userProfileRequest = () => {
+    return {
+        type: USER_PROFILE_REQUEST
+    }
+};
+
+export const userProfileError = (userId) => {
+    return {
+        type: USER_PROFILE_ERROR,
+        userId
+    }
+};
+
+export const userProfileReceived = (userId, userData) => {
+    return {
+        type: USER_PROFILE_RECEIVED,
+        userData,
+        userId
+    }
+};
+
+export const userProfileFetch = (userId) => {
+    return (dispatch) => {
+        dispatch(userProfileRequest());
+        return requests.get(`/users/${userId}`, true).then(
+            response => dispatch(userProfileReceived(userId, response))
+        ).catch(() => dispatch(userProfileError(userId)))
+    }
+};
 
