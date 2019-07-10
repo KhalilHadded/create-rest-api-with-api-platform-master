@@ -69,7 +69,7 @@ api_platform:
             # The name of the query parameter to set the number of items per page.
             items_per_page_parameter_name: 'itemsPerPage'
 
-            partial: true
+            partial: false
             client_partial: true
             partial_parameter_name: 'partial'
 
