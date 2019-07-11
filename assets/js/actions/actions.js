@@ -1,7 +1,7 @@
 import {requests} from "../agent";
 import {
     BLOG_POST_ERROR,
-    BLOG_POST_LIST_ADD,
+    BLOG_POST_FORM_UNLOAD,
     BLOG_POST_LIST_ERROR,
     BLOG_POST_LIST_RECEIVED,
     BLOG_POST_LIST_REQUEST,
@@ -20,7 +20,14 @@ import {
     USER_PROFILE_REQUEST,
     USER_PROFILE_RECEIVED,
     USER_PROFILE_ERROR,
-    USER_LOGOUT, USER_CONFIRMATION_SUCCESS, USER_REGISTER_COMPLETE
+    USER_LOGOUT,
+    USER_CONFIRMATION_SUCCESS,
+    USER_REGISTER_COMPLETE,
+    IMAGE_UPLOADED,
+    IMAGE_UPLOAD_REQUEST,
+    IMAGE_UPLOAD_ERROR,
+    IMAGE_DELETE_REQUEST,
+    IMAGE_DELETED
 } from "./constants";
 
 import {SubmissionError} from "redux-form";
@@ -81,19 +88,35 @@ export const blogPostFetch = (id) => {
             .then(response => dispatch(blogPostReceived(response)))
             .catch(error => dispatch(blogPostError(error)));
     }
-}
+};
 
 
-
-export const blogPostAdd = () => ({
-    type: BLOG_POST_LIST_ADD,
-    data:{
-
-        id: Math.floor(Math.random()*100+3),
-        title: 'A new added blog post'
+export const blogPostAdd = (title, content, images = []) => {
+    return (dispatch) => {
+        return requests.post(
+            '/blog_posts',
+            {
+                title,
+                content,
+                slug: title && title.replace(/ /g, "-").toLowerCase(),
+                images: images.map(image => `/api/images/${image.id}`)
+            }
+        ).catch((error) => {
+            if (401 === error.response.status) {
+                return dispatch(userLogout());
+            } else if (403 === error.response.status) {
+                throw new SubmissionError({
+                    _error: 'You do not have rights to publish blog posts!'
+                });
+            }
+            throw new SubmissionError(parseApiErrors(error));
+        })
     }
-});
+};
 
+export const blogPostFormUnload = () => ({
+    type: BLOG_POST_FORM_UNLOAD
+});
 
 
 export const commentListRequest = () => ({
@@ -254,4 +277,55 @@ export const userProfileFetch = (userId) => {
         ).catch(() => dispatch(userProfileError(userId)))
     }
 };
+
+
+export const imageUploaded = (data) => {
+    return {
+        type: IMAGE_UPLOADED,
+        image: data
+    }
+};
+
+export const imageUploadRequest = () => {
+    return {
+        type: IMAGE_UPLOAD_REQUEST,
+    }
+};
+
+export const imageUploadError = () => {
+    return {
+        type: IMAGE_UPLOAD_ERROR,
+    }
+};
+
+export const imageUpload = (file) => {
+    return (dispatch) => {
+        dispatch(imageUploadRequest());
+        return requests.upload('/images', file)
+            .then(response => dispatch(imageUploaded(response)))
+            .catch(() => dispatch(imageUploadError))
+    }
+};
+
+export const imageDeleteRequest = () => {
+    return {
+        type: IMAGE_DELETE_REQUEST,
+    }
+};
+
+export const imageDeleted = (id) => {
+    return {
+        type: IMAGE_DELETED,
+        imageId: id
+    }
+};
+
+export const imageDelete = (id) => {
+    return (dispatch) => {
+        dispatch(imageDeleteRequest());
+        return requests.delete(`/images/${id}`)
+            .then(() => dispatch(imageDeleted(id)));
+    }
+};
+
 

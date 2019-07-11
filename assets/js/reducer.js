@@ -6,6 +6,7 @@ import auth from "./reducers/auth";
 import registration from "./reducers/registration";
 import{reducer as formReducer} from "redux-form";
 import {routerReducer} from "react-router-redux";
+import blogPostForm from "./reducers/blogPostForm";
 
 export default combineReducers({
    blogPostList,
@@ -13,8 +14,7 @@ export default combineReducers({
    commentList,
    auth,
    registration,
+   blogPostForm,
    form: formReducer,
    router: routerReducer
-
-
 });
