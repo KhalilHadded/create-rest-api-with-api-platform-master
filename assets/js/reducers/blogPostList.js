@@ -1,6 +1,5 @@
 import {
     BLOG_POST_LIST_RECEIVED,
-    BLOG_POST_LIST_ADD,
     BLOG_POST_LIST_REQUEST,
     BLOG_POST_LIST_ERROR,
     BLOG_POST_LIST_SET_PAGE
@@ -35,12 +34,6 @@ export default(state = {
                 isFetching: false,
                 posts: null
             };
-        case BLOG_POST_LIST_ADD:
-            state = {
-                ...state,
-                posts: state.posts ? state.posts.concat(action.data) : state.posts
-            };
-            return state;
         case BLOG_POST_LIST_SET_PAGE:
             return {
                 ...state,

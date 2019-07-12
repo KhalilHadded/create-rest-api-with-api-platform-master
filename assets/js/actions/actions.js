@@ -60,7 +60,7 @@ export const blogPostListFetch = (page = 1) => {
             .then(response => dispatch(blogPostListReceived(response)))
             .catch(error => dispatch(blogPostListError(error)));
     }
-}
+};
 
 
 export const blogPostRequest = () => ({
@@ -144,7 +144,7 @@ export const commentListFetch = (id, page = 1) => {
             .then(response => dispatch(commentListReceived(response)))
             .catch(error => dispatch(commentListError(error)));
     }
-}
+};
 
 export const commentAdded = (comment) => ({
     type: COMMENT_ADDED,
@@ -246,7 +246,7 @@ export const userConfirm = (confirmationToken) => {
                 });
             });
     }
-}
+};
 
 export const userProfileRequest = () => {
     return {

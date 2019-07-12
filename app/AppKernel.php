@@ -26,6 +26,8 @@ class AppKernel extends Kernel
             new Vich\UploaderBundle\VichUploaderBundle(),
 
             new AppBundle\AppBundle(),
+			
+			new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
 
             new EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle()
 //            new Symfony\Bundle\AsseticBundle\AsseticBundle()
